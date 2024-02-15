@@ -11,22 +11,28 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            margin: 0;  }
+            margin: 0;  
+    }
     </style>
 </head>
 <body>
 
 <script>
 
+var gameState = {
+    gameWidth: 800,
+    gameHeight: 600,
+};
+
 var config = {
         type: Phaser.AUTO,
-        width: 800,
-        height: 600,
+        width: gameState.gameWidth,
+        height: gameState.gameHeight,
 //define-se o tamanho do "canvas" e qual tipo de renderizador utilizar, neste caso foi selecionado o modo automático
         scene: {
             preload: preload,
             create: create,
-            update: update,
+            update: update, //
         }
     };
 
@@ -36,6 +42,7 @@ var config = {
     function preload() {
         this.load.image('bg', 'assets/bg_space.png'); //carrega os assets antes de utilizá-los
         this.load.spritesheet('bird', 'assets/bird-red.png', { frameWidth: 75, frameHeight: 75 }); //aqui é definido o tamanho de cada frame dentro do sprite
+        this.load.spritesheet('bird2', 'assets/bird-purple.png', { frameWidth: 75, frameHeight: 75});
     }
 
     function create() {
@@ -49,13 +56,18 @@ var config = {
             repeat: -1 //define a quantidade de vezes que essa animação ira se repetir, neste caso indefinidamente. 
         });
 
-        passarinho.anims.play('fly', true); //da "play" na animação utilizando a variável passarinho em que foi armazenada
+        this.anims.create({
+            key: 'fly2',
+            frames: this.anims.generateFrameNumbers('bird2', { start: 0, end: 7 }),
+            frameRate:10,
+            repeat: -1
+        });
 
     }
 
     function update() { //a função update serve para definir eventos que ocorrem constantemente dentro do game.
 
-//Movimento no eixo X//
+        //Movimento no eixo X//
         if (passarinho.x === 100){
             passarinho.setFlip(false, false); 
             passarinho.ida = true; //se no início (100 pixels) virar para a direita e definir passarinho.ida como true
@@ -66,19 +78,21 @@ var config = {
         }
         if (passarinho.x === 700) {
             passarinho.setFlip(true, false);
-            passarinho.ida = false //se no eixo x for igual a 700 inverte o passaro para o lado inverso e define passarinho.ida como false
+            passarinho.ida = false; //se no eixo x for igual a 700 inverte o passaro para o lado inverso e define passarinho.ida como false
         }
         if (passarinho.x > 100 && passarinho.ida === false) {
             console.log("Quando concluidas as circunstâncias acima diminui-se 5 unidades do eixo X");
             passarinho.x -= 5; //se for maior que 100 no eixo X e passarinho.ida for false ir reduzir 5 do eixo X
         }
 
-//Movimento no eixo Y//
+        //Movimento no eixo Y//
         if (passarinho.y === 500) {
             passarinho.sobe = false; //se o passarinho estiver em 500 então definir passarinho.sobe como falso
+            passarinho.anims.play('fly', true); //da "play" na animação utilizando a variável passarinho em que foi armazenada
         } 
         else if (passarinho.y === 100) {
-            passarinho.sobe = true; //se o passarinho estiver em 100 então definir passarinho.sobe como true
+            passarinho.sobe = true;//se o passarinho estiver em 100 então definir passarinho.sobe como true
+            passarinho.anims.play('fly2', true); //da "play" na animação utilizando a variável passarinho em que foi armazenada
         }
         if (passarinho.sobe) {
             passarinho.y += 5; // se passarinho.sobe for "true" adicione mais 5 unidades
