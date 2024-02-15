@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.min.js"></script>
+    <title>Exercício do Pássaro</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;  }
+    </style>
+</head>
+<body>
+
+<script>
+
+var config = {
+        type: Phaser.AUTO,
+        width: 800,
+        height: 600,
+//define-se o tamanho do "canvas" e qual tipo de renderizador utilizar, neste caso foi selecionado o modo automático
+        scene: {
+            preload: preload,
+            create: create,
+            update: update,
+        }
+    };
+
+    var game = new Phaser.Game(config); //definem-se as variáveis.
+    var passarinho;
+
+    function preload() {
+        this.load.image('bg', 'assets/bg_space.png'); //carrega os assets antes de utilizá-los
+        this.load.spritesheet('bird', 'assets/bird-red.png', { frameWidth: 75, frameHeight: 75 }); //aqui é definido o tamanho de cada frame dentro do sprite
+    }
+
+    function create() {
+        this.add.image(400, 300, 'bg').setScale(1.2); //adiciona o asset ao "canvas" é definido sua posição e escala
+        passarinho = this.add.sprite(100, 300, 'bird').setScale(1.3);
+        
+        this.anims.create({ //cria a animação do pássaro
+            key: 'fly', //define o nome para se referir à animação como "fly"
+            frames: this.anims.generateFrameNumbers('bird', { start: 0, end: 7 }), //define-se o frame de inicio e de fim dentro do spritesheet
+            frameRate: 10, //define a quantidade de frames por segundo da animação
+            repeat: -1 //define a quantidade de vezes que essa animação ira se repetir, neste caso indefinidamente. 
+        });
+
+        passarinho.anims.play('fly', true); //da "play" na animação utilizando a variável passarinho em que foi armazenada
+
+    }
+
+    function update() { //a função update serve para definir eventos que ocorrem constantemente dentro do game.
+
+//Movimento no eixo X//
+        if (passarinho.x === 100){
+            passarinho.setFlip(false, false); 
+            passarinho.ida = true; //se no início (100 pixels) virar para a direita e definir passarinho.ida como true
+        }
+        if (passarinho.x < 700 && passarinho.ida === true ) {
+            console.log("Quando concluidas as circunstâncias acima aumenta-se 5 unidades do eixo X");
+            passarinho.x += 5; //se passarinho menor que 700 no eixo x e passarinho.ida for true andar 5 no eixo X
+        }
+        if (passarinho.x === 700) {
+            passarinho.setFlip(true, false);
+            passarinho.ida = false //se no eixo x for igual a 700 inverte o passaro para o lado inverso e define passarinho.ida como false
+        }
+        if (passarinho.x > 100 && passarinho.ida === false) {
+            console.log("Quando concluidas as circunstâncias acima diminui-se 5 unidades do eixo X");
+            passarinho.x -= 5; //se for maior que 100 no eixo X e passarinho.ida for false ir reduzir 5 do eixo X
+        }
+
+//Movimento no eixo Y//
+        if (passarinho.y === 500) {
+            passarinho.sobe = false; //se o passarinho estiver em 500 então definir passarinho.sobe como falso
+        } 
+        else if (passarinho.y === 100) {
+            passarinho.sobe = true; //se o passarinho estiver em 100 então definir passarinho.sobe como true
+        }
+        if (passarinho.sobe) {
+            passarinho.y += 5; // se passarinho.sobe for "true" adicione mais 5 unidades
+        } 
+        else {
+            passarinho.y -= 5; // se passarinho.sobe for "false" diminua 5 unidades
+        }
+    }
+</script>
+
+</body>
+</html>
