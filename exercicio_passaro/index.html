@@ -7,22 +7,17 @@
     <title>Exercício do Pássaro</title>
     <style>
         body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;  
+            display: flex; /*determina o tipo de caixa*/
+            justify-content: center; /*alinhamento dos itens no conteiner*/
+            align-items: center; /*alinhamento dos itens em outro eixo*/
+            height: 100vh; /*tamanho vertical*/
+            margin: 0;  /*margem das linhas*/
     }
     </style>
 </head>
 <body>
 
 <script>
-
-var gameState = {
-    gameWidth: 800,
-    gameHeight: 600,
-};
 
 var config = {
         type: Phaser.AUTO,
@@ -32,7 +27,7 @@ var config = {
         scene: {
             preload: preload,
             create: create,
-            update: update, //
+            update: update,
         }
     };
 
@@ -89,10 +84,12 @@ var config = {
         if (passarinho.y === 500) {
             passarinho.sobe = false; //se o passarinho estiver em 500 então definir passarinho.sobe como falso
             passarinho.anims.play('fly', true); //da "play" na animação utilizando a variável passarinho em que foi armazenada
+            passarinho.cor = false
         } 
         else if (passarinho.y === 100) {
             passarinho.sobe = true;//se o passarinho estiver em 100 então definir passarinho.sobe como true
             passarinho.anims.play('fly2', true); //da "play" na animação utilizando a variável passarinho em que foi armazenada
+            passarinho.cor = true
         }
         if (passarinho.sobe) {
             passarinho.y += 5; // se passarinho.sobe for "true" adicione mais 5 unidades
@@ -100,6 +97,7 @@ var config = {
         else {
             passarinho.y -= 5; // se passarinho.sobe for "false" diminua 5 unidades
         }
+
     }
 </script>
 
