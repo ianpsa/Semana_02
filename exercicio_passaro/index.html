@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,84 +21,125 @@
 
 var config = {
         type: Phaser.AUTO,
-        width: gameState.gameWidth,
-        height: gameState.gameHeight,
-//define-se o tamanho do "canvas" e qual tipo de renderizador utilizar, neste caso foi selecionado o modo automático
+        width: 800,
+        height: 600,   //define-se o tamanho do "canvas" e qual tipo de renderizador utilizar, neste caso foi selecionado o modo automático
+        
         scene: {
-            preload: preload,
+            preload: preload, 
             create: create,
             update: update,
         }
     };
 
-    var game = new Phaser.Game(config); //definem-se as variáveis.
-    var passarinho;
-
+    var game = new Phaser.Game(config); //define a variável game
+    
     function preload() {
-        this.load.image('bg', 'assets/bg_space.png'); //carrega os assets antes de utilizá-los
-        this.load.spritesheet('bird', 'assets/bird-red.png', { frameWidth: 75, frameHeight: 75 }); //aqui é definido o tamanho de cada frame dentro do sprite
-        this.load.spritesheet('bird2', 'assets/bird-purple.png', { frameWidth: 75, frameHeight: 75});
-    }
+
+        this.load.image("bg", "assets/bg_space.png"); //carrega os assets antes de utilizá-los
+        this.load.spritesheet("bird", "assets/bird-red.png", { frameWidth: 75, frameHeight: 75 }); //aqui é definido o tamanho de cada frame dentro do sprite
+        this.load.spritesheet("bird2", "assets/bird-purple.png", { frameWidth: 75, frameHeight: 75});
+        this.load.image("vida", "assets/racionaisCapa.png"); //carrega a capa dos racionais
+        this.load.image("aba-reta", "assets/aba-reta.png"); //carrega o boné aba-reta do pássaro
+        //audio//
+        this.load.audio("loka", "assets/song/vida-loka.mp3"); // carrega a música de fundo
+    };
 
     function create() {
-        this.add.image(400, 300, 'bg').setScale(1.2); //adiciona o asset ao "canvas" é definido sua posição e escala
-        passarinho = this.add.sprite(100, 300, 'bird').setScale(1.3);
+        //adiciona elementos dos Racionais
+        vidaLoka = this.sound.add("loka");
+        vidaLoka.play(); //da play na musica 
+        vidaLoka.pause(); //pausa a música
+        racionais = this.add.image(400, 300, "vida").setScale(1.5); //adiciona wallpaper dos integrantes do racionais ao canvas
+        //adiciona elementos comuns do game
+        this.add.image(400, 300, "bg").setScale(1.2); //adiciona o asset ao "canvas" é definido sua posição e escala
+        
+        passarinho = this.add.sprite(100, 300, "bird").setScale(1.3); //adiciona imagem do pássaro ao canvas
+
+        bone = this.add.image( 0, 0, "aba-reta").setScale(0.09); //adiciona asset de boné no canvas
         
         this.anims.create({ //cria a animação do pássaro
-            key: 'fly', //define o nome para se referir à animação como "fly"
-            frames: this.anims.generateFrameNumbers('bird', { start: 0, end: 7 }), //define-se o frame de inicio e de fim dentro do spritesheet
+            key: "fly", //define o nome para se referir à animação como "fly"
+            frames: this.anims.generateFrameNumbers("bird", { start: 0, end: 7 }), //define-se o frame de início e de fim dentro do spritesheet
             frameRate: 10, //define a quantidade de frames por segundo da animação
-            repeat: -1 //define a quantidade de vezes que essa animação ira se repetir, neste caso indefinidamente. 
+            repeat: -1 //define a quantidade de vezes que essa animação ira se repetir, neste caso indefinidamente
         });
 
-        this.anims.create({
-            key: 'fly2',
-            frames: this.anims.generateFrameNumbers('bird2', { start: 0, end: 7 }),
-            frameRate:10,
-            repeat: -1
+        this.anims.create({ //cria animação do pássaro em outra coloração
+            key: "fly2", //define o nome para se referir à animação como "fly2"
+            frames: this.anims.generateFrameNumbers("bird2", { start: 0, end: 7 }), //define-se o frame de início e de fim dentro do spritesheet
+            frameRate: 10, //define a quantidade de frames por segundo da animação
+            repeat: -1 //define a quantidade de vezes que a animação se repete, neste caso indefinidamente
         });
+    };
 
-    }
+function update() { //a função update serve para definir eventos que ocorrem constantemente dentro do game.
 
-    function update() { //a função update serve para definir eventos que ocorrem constantemente dentro do game.
+    //boné mais passarinho//
+    if(passarinho.ida === true){ //se passarinho está indo
+            bone.setFlip(false, false); //inverte a direção do boné
+            bone.x = passarinho.x + 15; //faz boné seguir sempre o passarinho +15 no eixo x
+            bone.y = passarinho.y - 15 //faz boné seguir sempre o passarinho -15 no eixo y
+        } else { //ou então
+            bone.setFlip(true, false); //inverte a direção do boné
+            bone.x = passarinho.x - 20; //faz boné seguir sempre o passarinho -20 no eixo x
+            bone.y = passarinho.y - 17 //faz boné seguir sempre o passarinho -20 no eixo x
+        }
 
         //Movimento no eixo X//
-        if (passarinho.x === 100){
-            passarinho.setFlip(false, false); 
-            passarinho.ida = true; //se no início (100 pixels) virar para a direita e definir passarinho.ida como true
+        if (passarinho.x === 100){ //se passarinho estiver na posição 100
+            passarinho.setFlip(false, false); //inverte a direção do pássaro
+            passarinho.ida = true //se no início (100 pixels) virar para a direita e definir passarinho.ida como true
         }
-        if (passarinho.x < 700 && passarinho.ida === true ) {
-            console.log("Quando concluidas as circunstâncias acima aumenta-se 5 unidades do eixo X");
-            passarinho.x += 5; //se passarinho menor que 700 no eixo x e passarinho.ida for true andar 5 no eixo X
+        if (passarinho.x < 700 && passarinho.ida === true ) { //se posição do passarinho menor que 700 no eixo x e estiver indo
+            console.log("Quando concluidas as circunstâncias acima aumenta-se 5 unidades do eixo X"); //adiciona mensagem no console
+            passarinho.x += 2 //se passarinho menor que 700 no eixo x e passarinho.ida for true andar 5 no eixo X
         }
-        if (passarinho.x === 700) {
-            passarinho.setFlip(true, false);
-            passarinho.ida = false; //se no eixo x for igual a 700 inverte o passaro para o lado inverso e define passarinho.ida como false
+        if (passarinho.x === 700) { // se passarinho estiver na posição 700
+            passarinho.setFlip(true, false); //inverte a direção do pássaro
+            passarinho.ida = false //se no eixo x for igual a 700 inverte o passaro para o lado inverso e define passarinho.ida como false
         }
-        if (passarinho.x > 100 && passarinho.ida === false) {
-            console.log("Quando concluidas as circunstâncias acima diminui-se 5 unidades do eixo X");
-            passarinho.x -= 5; //se for maior que 100 no eixo X e passarinho.ida for false ir reduzir 5 do eixo X
+        if (passarinho.x > 100 && passarinho.ida === false) { //se pássaro estiver maior que 100 e não estiver indo
+            console.log("Quando concluidas as circunstâncias acima diminui-se 5 unidades do eixo X"); //adiciona mensagem no console
+            passarinho.x -= 2 //se for maior que 100 no eixo X e passarinho.ida for false ir reduzir 5 do eixo X
+        }
+    
+        //Quando o mouse estiver sobre o passarinho.
+        if(passarinho.x - this.input.x <= 30 && passarinho.y - this.input.y <= 30 && this.input.x - passarinho.x <= 30 && this.input.y - passarinho.y <= 30) {
+    
+        vidaLoka.resume(); //resume a música adicionada em preload
+        racionais.setDepth(1); //muda a camada que a imagem ocupa
+        bone.setDepth(2) //muda a camada que a imagem ocupa
+        passarinho.setDepth(1) //muda a camada que a imagem ocupa 
+        } else { //se não
+            vidaLoka.pause(); //pausa a música
+            racionais.setDepth(-2); //muda a camada que a imagem ocupa
+            bone.setDepth(-1) //muda a camada que a imagem ocupa
         }
 
         //Movimento no eixo Y//
-        if (passarinho.y === 500) {
+        if (passarinho.y === 500) { //se posição do passarinho no eixo y igual a 500
             passarinho.sobe = false; //se o passarinho estiver em 500 então definir passarinho.sobe como falso
             passarinho.anims.play('fly', true); //da "play" na animação utilizando a variável passarinho em que foi armazenada
             passarinho.cor = false
-        } 
+        }
         else if (passarinho.y === 100) {
             passarinho.sobe = true;//se o passarinho estiver em 100 então definir passarinho.sobe como true
             passarinho.anims.play('fly2', true); //da "play" na animação utilizando a variável passarinho em que foi armazenada
             passarinho.cor = true
         }
         if (passarinho.sobe) {
-            passarinho.y += 5; // se passarinho.sobe for "true" adicione mais 5 unidades
+            passarinho.y += 2; // se passarinho.sobe for "true" adicione mais 5 unidades
         } 
         else {
-            passarinho.y -= 5; // se passarinho.sobe for "false" diminua 5 unidades
+            passarinho.y -= 2; // se passarinho.sobe for "false" diminua 5 unidades
         }
+    
+    };
 
-    }
+</script>
+
+<script>
+
 </script>
 
 </body>
