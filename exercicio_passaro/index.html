@@ -104,7 +104,7 @@ function update() { //a função update serve para definir eventos que ocorrem c
         }
     
         //Quando o mouse estiver sobre o passarinho.
-        if(passarinho.x - this.input.x <= 30 && passarinho.y - this.input.y <= 30 && this.input.x - passarinho.x <= 30 && this.input.y - passarinho.y <= 30) {
+        if(passarinho.x - this.input.x <= 45 && passarinho.y - this.input.y <= 45 && this.input.x - passarinho.x <= 45 && this.input.y - passarinho.y <= 45) {
     
         vidaLoka.resume(); //resume a música adicionada em preload
         racionais.setDepth(1); //muda a camada que a imagem ocupa
@@ -139,7 +139,11 @@ function update() { //a função update serve para definir eventos que ocorrem c
 </script>
 
 <script>
-
+let count = 1 //define valor inicial de count
+while(count < 10){ //enquanto count for menor que 10 continuar o loop
+    console.log(count) //mostra o valor de count no console
+    count += 1 //adiciona 1 à count
+}
 </script>
 
 </body>
