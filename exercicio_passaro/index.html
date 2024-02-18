@@ -74,16 +74,19 @@ var config = {
 
 function update() { //a função update serve para definir eventos que ocorrem constantemente dentro do game.
 
-    //boné mais passarinho//
-    if(passarinho.ida === true){ //se passarinho está indo
+    //controle do boné 
+    switch (passarinho.ida) { 
+        case true: //se for verdadeiro
             bone.setFlip(false, false); //inverte a direção do boné
             bone.x = passarinho.x + 15; //faz boné seguir sempre o passarinho +15 no eixo x
             bone.y = passarinho.y - 15 //faz boné seguir sempre o passarinho -15 no eixo y
-        } else { //ou então
+        break;
+        
+        case false: //se for falso
             bone.setFlip(true, false); //inverte a direção do boné
             bone.x = passarinho.x - 20; //faz boné seguir sempre o passarinho -20 no eixo x
             bone.y = passarinho.y - 17 //faz boné seguir sempre o passarinho -20 no eixo x
-        }
+    }
 
         //Movimento no eixo X//
         if (passarinho.x === 100){ //se passarinho estiver na posição 100
